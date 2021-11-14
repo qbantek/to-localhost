@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  {{template "header.tmpl.html"}}
+<body>
+  {{template "nav.tmpl.html"}}
+
+  <div class="jumbotron text-center">
+    <div class="container">
+      <h1>To localhost</h1>
+      <p>This application helps developers to redirect a callback URL to 
+        localhost.</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8">
+        <h2>Use callback URLs in development</h2>
+        <p style="margin-bottom: 2em;">With this application you are able to
+          redirect callbacks to localhost even when localhost is not allowed.</p>
+        <pre>
+          Example: 
+          https://to-localhost.herokuapp.com/3000 -> http://localhost:3000</pre>
+      </div>
+
+    </div> <!-- row -->
+  </div>
+
+</body>
+</html>

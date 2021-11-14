@@ -1,0 +1,12 @@
+{
+  "name": "To localhost!",
+  "description": "Redirects all requests to localhost",
+  "keywords": [
+    "redirect",
+    "go",
+    "localhost",
+    "development"
+  ],
+  "website": "https://to-localhost.herokuapp.com/",
+  "repository": "https://github.com/qbantek/to-localhost"
+}

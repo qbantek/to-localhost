@@ -1,0 +1,10 @@
+.git/
+.github/
+bin/
+.dockerignore
+.env
+.gitattributes
+.gitignore
+Dockerfile
+heroku.yml
+README.md
