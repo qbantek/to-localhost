@@ -1,18 +1,12 @@
 package main
 
 import (
-	"os"
-
+	"github.com/qbantek/to-localhost/internal/config"
 	"github.com/qbantek/to-localhost/internal/routes"
 )
 
-const defaultPort = "5000"
-
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = defaultPort
-	}
+	cfg := config.NewConfig()
 
-	routes.SetupRouter().Run(":" + port)
+	routes.SetupRouter().Run(":" + cfg.Port)
 }
