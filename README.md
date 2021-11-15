@@ -1,6 +1,10 @@
 
 # to-localhost
 
+[![Go](https://github.com/qbantek/to-localhost/actions/workflows/go.yml/badge.svg)](https://github.com/qbantek/to-localhost/actions/workflows/go.yml)
+[![CodeQL](https://github.com/qbantek/to-localhost/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/qbantek/to-localhost/actions/workflows/codeql-analysis.yml)
+
+
 This barebones Go app helps developers to redirect a callback URL to localhost.
 
 The idea was taken from https://tolocalhost.com/.
