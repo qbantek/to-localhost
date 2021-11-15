@@ -1,7 +1,6 @@
 package routes_test
 
 import (
-	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -47,8 +46,4 @@ func TestRedirect(t *testing.T) {
 			}
 		})
 	}
-}
-
-func randomInteger(min, max int) int {
-	return rand.Intn(max-min) + min
 }
