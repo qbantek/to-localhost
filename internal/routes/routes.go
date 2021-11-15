@@ -1,41 +1,24 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/qbantek/to-localhost/internal/localhosturl"
 	"github.com/qbantek/to-localhost/internal/projectpath"
 )
 
-const (
-	MIN_PORT      = 1
-	MAX_PORT      = 65535
-	LOCALHOST_URL = "http://localhost"
-)
+// NewEngine returns an Engine (Server) instance with the Logger and Recovery
+// middleware already attached and all the routes defined.
+func NewEngine() *gin.Engine {
+	engine := gin.Default()
 
-type redirectParams struct {
-	Port string
-}
+	engine.LoadHTMLGlob(projectpath.RootPath + "/templates/*.tmpl.html")
+	engine.Static("/static", projectpath.RootPath+"/static")
+	engine.GET("/:port", Redirect)
+	engine.GET("/", Index)
 
-type portError struct {
-	port string
-}
-
-func (e *portError) Error() string {
-	return fmt.Sprintf("Invalid port value: %s", e.port)
-}
-
-func SetupRouter() *gin.Engine {
-	router := gin.Default()
-
-	router.LoadHTMLGlob(projectpath.RootPath + "/templates/*.tmpl.html")
-	router.Static("/static", projectpath.RootPath+"/static")
-	router.GET("/:port", Redirect)
-	router.GET("/", Index)
-
-	return router
+	return engine
 }
 
 func Index(c *gin.Context) {
@@ -43,31 +26,11 @@ func Index(c *gin.Context) {
 }
 
 func Redirect(c *gin.Context) {
-	r := redirectParams{Port: c.Param("port")}
-
-	url, err := r.redirectUrl()
+	url, err := localhosturl.NewURL(c.Param("port"))
 	if err != nil {
-		errorPage(c, err)
+		c.HTML(http.StatusBadRequest, "error.tmpl.html", gin.H{"error": err.Error()})
 		return
 	}
 
 	c.Redirect(http.StatusMovedPermanently, url)
-}
-
-func errorPage(c *gin.Context, err error) {
-	c.HTML(http.StatusBadRequest, "error.tmpl.html", gin.H{"error": err.Error()})
-}
-
-func (r *redirectParams) redirectUrl() (string, error) {
-	url := LOCALHOST_URL
-
-	if r.Port != "" && r.Port != "80" {
-		portInt, err := strconv.Atoi(r.Port)
-		if err != nil || portInt < MIN_PORT || portInt > MAX_PORT {
-			return "", &portError{r.Port}
-		}
-		url += ":" + r.Port
-	}
-
-	return url, nil
 }

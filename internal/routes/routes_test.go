@@ -1,12 +1,10 @@
 package routes_test
 
 import (
-	"fmt"
 	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/qbantek/to-localhost/internal/routes"
@@ -14,7 +12,7 @@ import (
 
 func TestIndex(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	router := routes.SetupRouter()
+	router := routes.NewEngine()
 
 	w := httptest.NewRecorder()
 	req, _ := http.NewRequest("GET", "/", nil)
@@ -27,23 +25,15 @@ func TestIndex(t *testing.T) {
 
 func TestRedirect(t *testing.T) {
 	gin.SetMode(gin.TestMode)
-	router := routes.SetupRouter()
-
-	// get a random Port number between 1 and 65535
-	rand.Seed(time.Now().UnixNano())
-	n := fmt.Sprintf("%d", randomInteger(1, 65535))
+	router := routes.NewEngine()
 
 	cases := []struct {
 		name           string
 		port           string
 		httpStatusCode int
-		locationHeader string
 	}{
-		{"Default HTTP Port", "80", http.StatusMovedPermanently, "http://localhost"},
-		{"A valid Port", n, http.StatusMovedPermanently, "http://localhost:" + n},
-		{"Non numeric Port value", "invalid", http.StatusBadRequest, ""},
-		{"Port number < 1", "0", http.StatusBadRequest, ""},
-		{"Port number > 65535", "65536", http.StatusBadRequest, ""},
+		{"Valid port value", "3000", http.StatusMovedPermanently},
+		{"Invalid port value", "invalid", http.StatusBadRequest},
 	}
 
 	for _, c := range cases {
@@ -54,10 +44,6 @@ func TestRedirect(t *testing.T) {
 
 			if c.httpStatusCode != w.Code {
 				t.Errorf("Want %v, got %v", c.httpStatusCode, w.Code)
-			}
-
-			if w.Header().Get("Location") != c.locationHeader {
-				t.Errorf("Want %v, got %v", c.locationHeader, w.Header().Get("Location"))
 			}
 		})
 	}
