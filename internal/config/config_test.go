@@ -7,7 +7,7 @@ import (
 	"github.com/qbantek/to-localhost/internal/config"
 )
 
-func TestNewConfig_AcceptsCustomPort(t *testing.T) {
+func TestNewConfig(t *testing.T) {
 	cases := []struct {
 		name string
 		env  string
@@ -35,13 +35,6 @@ func TestNewConfig_AcceptsCustomPort(t *testing.T) {
 		})
 	}
 
-	cfg := config.NewConfig()
-	if cfg == nil {
-		t.Error("config.NewConfig() returned nil")
-	}
-}
-
-func TestNewConfig_Valid(t *testing.T) {
 	cfg := config.NewConfig()
 	if cfg == nil {
 		t.Error("config.NewConfig() returned nil")
