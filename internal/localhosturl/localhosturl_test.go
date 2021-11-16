@@ -20,12 +20,12 @@ func TestNewURL(t *testing.T) {
 		want         string
 		errorMessage string
 	}{
-		{"Empty String", "", "http://localhost", ""},
 		{"Default HTTP Port", "80", "http://localhost", ""},
 		{"A valid Port", n, "http://localhost:" + n, ""},
-		{"Non numeric Port value", "invalid", "", "Invalid port value: invalid"},
-		{"Port number < 1", "0", "", "Invalid port value: 0"},
-		{"Port number > 65535", "65536", "", "Invalid port value: 65536"},
+		{"Non numeric Port value", "invalid", "", "Invalid port value: [invalid]"},
+		{"Empty String", "", "", "Invalid port value: []"},
+		{"Port number < 1", "0", "", "Invalid port value: [0]"},
+		{"Port number > 65535", "65536", "", "Invalid port value: [65536]"},
 	}
 
 	for _, c := range cases {

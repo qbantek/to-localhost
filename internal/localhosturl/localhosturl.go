@@ -16,19 +16,28 @@ type portError struct {
 }
 
 func (e *portError) Error() string {
-	return fmt.Sprintf("Invalid port value: %s", e.port)
+	return fmt.Sprintf("Invalid port value: [%s]", e.port)
 }
 
 func NewURL(port string) (string, error) {
-	url := LOCALHOST_URL
-
-	if port != "" && port != "80" {
-		portInt, err := strconv.Atoi(port)
-		if err != nil || portInt < MIN_PORT || portInt > MAX_PORT {
-			return "", &portError{port}
-		}
-		url += ":" + port
+	// HTTP default port is 80
+	if port == "80" {
+		return LOCALHOST_URL, nil
 	}
 
-	return url, nil
+	err := validatePort(port)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s:%s", LOCALHOST_URL, port), nil
+}
+
+func validatePort(port string) error {
+	portInt, err := strconv.Atoi(port)
+	if err != nil || portInt < MIN_PORT || portInt > MAX_PORT {
+		return &portError{port}
+	}
+
+	return nil
 }
