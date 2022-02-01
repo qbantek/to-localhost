@@ -22,6 +22,19 @@ func TestIndex(t *testing.T) {
 	}
 }
 
+func TestHealthCheck(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	router := routes.NewEngine()
+
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/health", nil)
+	router.ServeHTTP(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Want %d, got %v", http.StatusOK, w.Code)
+	}
+}
+
 func TestRedirect(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := routes.NewEngine()

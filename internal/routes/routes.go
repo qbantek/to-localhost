@@ -16,6 +16,7 @@ func NewEngine() *gin.Engine {
 	engine.StaticFile("/favicon.ico", projectpath.RootPath+"/static/favicon.ico")
 	engine.LoadHTMLGlob(projectpath.RootPath + "/templates/*.tmpl.html")
 	engine.Static("/static", projectpath.RootPath+"/static")
+	engine.GET("/health", HealthCheck)
 	engine.GET("/:port", Redirect)
 	engine.GET("/", Index)
 
@@ -24,6 +25,10 @@ func NewEngine() *gin.Engine {
 
 func Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.tmpl.html", nil)
+}
+
+func HealthCheck(c *gin.Context) {
+	c.String(http.StatusOK, "OK")
 }
 
 func Redirect(c *gin.Context) {
