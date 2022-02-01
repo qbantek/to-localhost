@@ -1,21 +1,29 @@
-FROM heroku/heroku:20-build as build
+# Builder
+FROM golang:1.17-alpine3.14 AS builder
 
-COPY . /app
 WORKDIR /app
 
-# Setup buildpack
-RUN mkdir -p /tmp/buildpack/heroku/go /tmp/build_cache /tmp/env
-RUN curl https://buildpack-registry.s3.amazonaws.com/buildpacks/heroku/go.tgz | tar xz -C /tmp/buildpack/heroku/go
+COPY go.mod go.sum .
+RUN go mod download
 
-#Execute Buildpack
-RUN STACK=heroku-20 /tmp/buildpack/heroku/go/bin/compile /app /tmp/build_cache /tmp/env
+COPY . .
+RUN CGO_ENABLED=0 go build -ldflags "-s -w" -o bin/to-localhost .
 
-# Prepare final, minimal image
-FROM heroku/heroku:20
+# Runner
+FROM alpine:latest
 
-COPY --from=build /app /app
-ENV HOME /app
+ARG GIN_MODE=release
+ENV GIN_MODE=$GIN_MODE
+ARG PORT=5000
+ENV PORT=$PORT
+
+EXPOSE $PORT
+
 WORKDIR /app
-RUN useradd -m heroku
-USER heroku
-CMD /app/bin/to-localhost
+COPY --from=builder /app/bin/to-localhost bin/to-localhost
+COPY --from=builder /app/templates/*.tmpl.html templates/
+COPY --from=builder /app/static/main.min.css /app/static/favicon.ico static/
+
+RUN chmod +x /app/bin/to-localhost
+
+CMD ["/app/bin/to-localhost"]
