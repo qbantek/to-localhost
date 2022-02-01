@@ -7,4 +7,6 @@ bin/
 .gitignore
 Dockerfile
 heroku.yml
+LICENSE
+Makefile
 README.md
