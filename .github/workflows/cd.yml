@@ -16,6 +16,6 @@ jobs:
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           usedocker: true
           healthcheck: "https://to-localhost.herokuapp.com/health"
-          checkstring: "NewURL: NewPort: invalid port: health"
+          checkstring: "OK"
           delay: 5
           rollbackonhealthcheckfailed: true
